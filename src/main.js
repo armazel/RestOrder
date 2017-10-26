@@ -13,6 +13,9 @@ import Table from './components/Table'
 import Breadcrumbs from './components/Breadcrumbs'
 import ModelOrder from './components/ModalOrder'
 import DatePicker from './components/DatePicker'
+import VueTimepicker from 'vue2-timepicker'
+
+
 
 Vue.config.productionTip = false
 
@@ -25,6 +28,8 @@ Vue.component('rf-table', Table)
 Vue.component('rf-breadcrumbs', Breadcrumbs);
 Vue.component('model-order', ModelOrder)
 Vue.component('date-picker-area', DatePicker)
+Vue.component('vue-timepicker', VueTimepicker)
+
 
 /* eslint-disable no-new */
 

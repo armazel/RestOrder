@@ -13,7 +13,9 @@
      >
      </ui-datepicker>
    </div>
-    <span class="devider-line">-</span>
+    <div class="devider-line-block">
+      <span class="devider-line">-</span>
+    </div>
 
     <div class="date-pick-block">
     <ui-datepicker
@@ -57,7 +59,7 @@
     flex-wrap: nowrap;
     color: white;
     .date-pick-block{
-      width: 27%;
+      width: 29%;
       .ui-datepicker__label{
         display: flex;
         flex-wrap: wrap;
@@ -84,7 +86,12 @@
       }
     }
   }
+  .devider-line-block{
+    display: flex;
+    align-items: flex-start;
+  }
   span.devider-line{
+    text-align: start;
     margin: 0 15px;
   }
 </style>

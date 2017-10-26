@@ -1,11 +1,14 @@
 <template>
   <div>
+    <div class="controll-panel">
+      <ui-button @click="openOrder" color="accent" icon="add">Добавить заказ</ui-button>
+    </div>
     <rf-table bordered striped hover
               keyField="id"
               :headerHeight="34"
               :lineHeight="44"
               :selection="selectionOrder"
-              @select="selectOrder"
+              @select="editOrder"
               :lines="dataInfo">
       <template slot="header">
         <th style="display: flex; flex: 1 1 5%">Номер</th>
@@ -217,6 +220,42 @@
             curierName: 'Прокопий'
           },
           {
+            id: '24ПА34R356',
+            date: new Date(),
+            pointOfDelivery: 'Азазаза 14',
+            client: 'Азазель',
+            addressInfo: 'Кунцевщина 15-255',
+            phoneNumber: '+375 29 546 54 14',
+            statusOrder: 'готовка',
+            timeSend: new Date(),
+            type: 'самовывоз',
+            curierName: 'Прокопий'
+          },
+          {
+            id: '24ПА34R356',
+            date: new Date(),
+            pointOfDelivery: 'Азазаза 14',
+            client: 'Азазель',
+            addressInfo: 'Кунцевщина 15-255',
+            phoneNumber: '+375 29 546 54 14',
+            statusOrder: 'готовка',
+            timeSend: new Date(),
+            type: 'самовывоз',
+            curierName: 'Прокопий'
+          },
+          {
+            id: '24ПА34R356',
+            date: new Date(),
+            pointOfDelivery: 'Азазаза 14',
+            client: 'Азазель',
+            addressInfo: 'Кунцевщина 15-255',
+            phoneNumber: '+375 29 546 54 14',
+            statusOrder: 'готовка',
+            timeSend: new Date(),
+            type: 'самовывоз',
+            curierName: 'Прокопий'
+          },
+          {
             id: '14G35FJ554H6',
             date: new Date(),
             pointOfDelivery: 'Фрунзе 34',
@@ -327,11 +366,15 @@
         }
       },
 
-      selectOrder(order){
+      editOrder(order){
         this.selectionOrder=order;
         if(order){
-          this.$refs['modal-order'].open(order);
+          this.$refs['modal-order'].open(order,1);
         }
+      },
+
+      openOrder(){
+        this.$refs['modal-order'].open(null,0);
       },
 
       filterLinesDebounced: _.debounce(function () {
@@ -359,7 +402,7 @@
 
 
 
-<style>
+<style lang="scss">
   .table-component__table tbody tr:nth-child(even)
   td{
     display: flex;
@@ -389,6 +432,19 @@
   }
   .rf-table tr.filters.filters{
     background: whitesmoke;
+  }
+  main{
+    margin-top: 0;
+  }
+  .controll-panel{
+    margin: 5px auto;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    .ui-button--type-primary.ui-button--color-accent,
+    .ui-button--type-primary.ui-button--color-accent:hover{
+      background-color: #35495E;
+    }
   }
 </style>
 

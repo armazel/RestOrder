@@ -1,7 +1,8 @@
 <template>
     <ui-modal class="modal-good-group" ref="modal" dismissOn="esc close-button" @open="visible = true" @close="visible = false">
         <template slot="header">
-            <h2> <ui-icon class="ui-modal__header-icon" icon="build" style="margin-right: 10px"></ui-icon>Изменение заказа № {{numberOrder}}</h2>
+            <h2 v-if="visibleHeader"> <ui-icon class="ui-modal__header-icon" icon="build" style="margin-right: 10px"></ui-icon>Изменение заказа № {{numberOrder}}</h2>
+            <h2 v-if="!visibleHeader"> <ui-icon class="ui-modal__header-icon" icon="add_shopping_cart" style="margin-right: 10px"></ui-icon>Создание заказа</h2>
         </template>
 
         <template>
@@ -15,16 +16,21 @@
                 v-model="numberOrder">
               </ui-textbox>
 
-              <ui-datepicker
-                floating-label
-                orientation="landscape"
-                picker-type="modal"
-                icon="events"
-                placeholder="Select a date"
-                v-model="date"
-                :lang="langMass"
-              >Дата/время создания
-              </ui-datepicker>
+              <div class="date-block">
+                <vue-timepicker v-model="yourTimeValueCreate" format="HH:mm:ss"></vue-timepicker>
+
+                <ui-datepicker
+                  floating-label
+                  orientation="landscape"
+                  picker-type="modal"
+                  icon="events"
+                  placeholder="Select a date"
+                  v-model="date"
+                  :lang="langMass"
+                >Дата/время создания
+                </ui-datepicker>
+
+              </div>
 
               <ui-select
                 class="configs"
@@ -61,6 +67,23 @@
                 v-model="phoneNumber">
               </ui-textbox>
 
+              <div class="date-block">
+
+                <vue-timepicker v-model="yourTimeValueSend" format="HH:mm:ss"></vue-timepicker>
+
+                <ui-datepicker
+                  floating-label
+                  orientation="landscape"
+                  picker-type="modal"
+                  icon="events"
+                  placeholder="Select a date"
+                  v-model="timeSend"
+                  :lang="langMass"
+                >Дата/время доставки
+                </ui-datepicker>
+
+              </div>
+
               <ui-select floating-label
                          label="Тип доставки"
                          icon="send"
@@ -81,17 +104,6 @@
                          :keys="{label: 'name', value: 'select'}">
               </ui-select>
 
-              <ui-datepicker
-                floating-label
-                orientation="landscape"
-                picker-type="modal"
-                icon="events"
-                placeholder="Select a date"
-                v-model="timeSend"
-                :lang="langMass"
-              >Дата/время доставки
-              </ui-datepicker>
-
               <ui-textbox
                 floating-label
                 icon="supervisor_account"
@@ -104,6 +116,9 @@
         </template>
 
       <template slot="footer">
+        <div class="controll-panel-modal" v-if="visibleHeader">
+          <ui-button color="accent" icon="delete">Удалить заказ</ui-button>
+        </div>
         <ui-button type="primary" color="primary" icon="done" @click="save">Сохранить</ui-button>
         <ui-button @click="close">Закрыть</ui-button>
       </template>
@@ -125,87 +140,100 @@
 
         },
 
-        data() {
-            return {
-                langMass:languageFr,
-                visible: false,
-                saving: false,
+      data() {
+        return {
+          langMass: languageFr,
+          visible: false,
+          saving: false,
 
-                id: -1,
-                groupKey: -1,
-                name: '',
-                alias: '',
-                model: '',
-                valueKey: -1,
-                groupName:'',
+          yourTimeValueCreate: {
+            HH: new Date().getHours(),
+            mm: new Date().getMinutes(),
+            ss: new Date().getSeconds()
+          },
 
-                selectedValue: 0,
+          yourTimeValueSend: {
+            HH: new Date().getHours(),
+            mm: new Date().getMinutes(),
+            ss: new Date().getSeconds()
+          },
 
-              numberOrder: '',
-              date: new Date(),
-              pointOfDelivery: '',
-              clientInfo: '',
-              addressInfo: '',
-              phoneNumber: '',
-              statusOrder: '',
-              timeSend: new Date(),
-              type: '',
-              curierName: '',
+          visibleHeader: '',
+          id: -1,
+          groupKey: -1,
+          name: '',
+          alias: '',
+          model: '',
+          valueKey: -1,
+          groupName: '',
 
-              pointOfDeliverySend: [
-                {
-                  name: 'нет',
-                  select: false
-                },
-                {
-                  name: 'Карлова 8',
-                  select: true
-                },
-                {
-                  name: 'Азазаза 14',
-                  select: true
-                },
-                {
-                  name: 'Фрунзе 34',
-                  select: true
-                }
-              ],
+          selectedValue: 0,
 
-              typeStatus:[
-                {
-                  name: 'нет',
-                  select: false
-                },
-                {
-                  name: 'доставка',
-                  select: true
-                },
-                {
-                  name: 'готовка',
-                  select: true
-                },
-                {
-                  name: 'апокалипсис сегодня',
-                  select: true
-                }
-              ],
+          numberOrder: '',
+          date: new Date(),
+          pointOfDelivery: '',
+          clientInfo: '',
+          addressInfo: '',
+          phoneNumber: '',
+          statusOrder: '',
+          timeSend: new Date(),
+          type: '',
+          curierName: '',
 
-              typeDelivery:[
-                {
-                  name: 'нет',
-                  select: false
-                },
-                {
-                  name: 'курьер',
-                  select: true
-                },
-                {
-                  name: 'самовывоз',
-                  select: true
-                }
-              ],
-            };
-        },
+          pointOfDeliverySend: [
+            {
+              name: 'нет',
+              select: false
+            },
+            {
+              name: 'Карлова 8',
+              select: true
+            },
+            {
+              name: 'Азазаза 14',
+              select: true
+            },
+            {
+              name: 'Фрунзе 34',
+              select: true
+            }
+          ],
+
+          typeStatus: [
+            {
+              name: 'нет',
+              select: false
+            },
+            {
+              name: 'доставка',
+              select: true
+            },
+            {
+              name: 'готовка',
+              select: true
+            },
+            {
+              name: 'апокалипсис сегодня',
+              select: true
+            }
+          ],
+
+          typeDelivery: [
+            {
+              name: 'нет',
+              select: false
+            },
+            {
+              name: 'курьер',
+              select: true
+            },
+            {
+              name: 'самовывоз',
+              select: true
+            }
+          ],
+        };
+      },
 
         computed: {
 
@@ -238,17 +266,21 @@
               this.timeSend = order.timeSend
               this.type = order.type
               this.curierName = order.curierName
+
+              this.visibleHeader = true;
             } else {
               this.numberOrder = ''
-              this.date = ''
+              this.date = new Date()
               this.pointOfDelivery = ''
               this.client = ''
               this.addressInfo = ''
               this.phoneNumber = ''
               this.statusOrder = ''
-              this.timeSend = ''
+              this.timeSend = new Date()
               this.type = ''
               this.curierName = ''
+
+              this.visibleHeader = false;
             }
 
             // Обновим список единиц измерения в vuex
@@ -267,6 +299,12 @@
 
                 this.$refs['modal'].close();
             },
+
+          onEndDatetimeChanged: function(newEnd) {
+              debugger;
+            let startPicker = this.$.startPicker.control;
+            startPicker.maxDate(newEnd);
+          },
 
             save() {
 
@@ -329,10 +367,20 @@
       }
     }
   }
+  .controll-panel-modal{
+    position: absolute;
+    left: 0;
+    .ui-button--type-primary.ui-button--color-accent,
+    .ui-button--type-primary.ui-button--color-accent:hover{
+      margin-left: 10px;
+      background-color: #ff4426;
+    }
+  }
   .option-block:not(:first-child){
     margin-left: 20px;
   }
   .ui-modal__footer{
+    position: relative;
     height: 3.5rem;
     box-shadow: 0 -1px 1px rgba(0, 0, 0, 0.16);
     background-color: #f5f5f5;
@@ -342,5 +390,43 @@
   }
   .ui-modal__container{
     width: 49rem;
+  }
+
+  .clock{
+    position: absolute;
+    background: rgba(0,0,0,0.3);
+  }
+  .date-block{
+    position: relative;
+    .ui-datepicker{
+      width: 60%;
+    }
+    .ui-datepicker__label{
+      width: 182%;
+    }
+    .time-picker{
+      position: absolute;
+      z-index: 10;
+      right: 0;
+      top: 17px;
+      &:hover{
+        cursor: pointer;
+      }
+      input.display-time{
+        text-align: center;
+        border: none;
+        color: rgba(0, 0, 0, 0.87);
+        font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        font-size: 1rem;
+      }
+      input.display-time:hover{
+        cursor: pointer;
+        opacity: 0.8;
+        transition: all 0.5s ease;
+      }
+    }
+    .time-picker:hover{
+      cursor: pointer !important;
+    }
   }
 </style>
